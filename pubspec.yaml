@@ -38,6 +38,9 @@ dependencies:
   # Local persistence for saves, progression and offline earnings.
   shared_preferences: ^2.3.2
 
+  # Sound effects (files are synthesised into assets/sfx by tool/gen_sfx.dart).
+  audioplayers: ^6.1.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -79,6 +82,9 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+  assets:
+    - assets/sfx/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

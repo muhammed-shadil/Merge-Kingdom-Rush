@@ -65,6 +65,7 @@ class _SplashScreenState extends State<SplashScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
+        fit: StackFit.expand,
         alignment: Alignment.center,
         children: [
           const Positioned.fill(child: AnimatedBackground()),
@@ -75,6 +76,7 @@ class _SplashScreenState extends State<SplashScreen>
               final fade = Curves.easeIn.transform(_logo.value.clamp(0, 1));
               return Column(
                 mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Transform.scale(
                     scale: pop,
