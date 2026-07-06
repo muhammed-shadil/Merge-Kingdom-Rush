@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../models/game_models.dart';
 import '../theme/app_theme.dart';
@@ -39,13 +40,13 @@ class UnitCard extends StatelessWidget {
       ),
       child: Stack(
         children: [
-          // Glossy top highlight.
+          // Glossy top highlight (3D bevel — light from above).
           Positioned(
             top: 0,
             left: 0,
             right: 0,
             child: Container(
-              height: size * 0.4,
+              height: size * 0.44,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.vertical(
                   top: Radius.circular(size * 0.24),
@@ -54,8 +55,30 @@ class UnitCard extends StatelessWidget {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    Colors.white.withValues(alpha: 0.28),
+                    Colors.white.withValues(alpha: 0.42),
                     Colors.white.withValues(alpha: 0),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          // Bottom inner shade (3D bevel — darker underside).
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              height: size * 0.38,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.vertical(
+                  bottom: Radius.circular(size * 0.24),
+                ),
+                gradient: LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  colors: [
+                    Colors.black.withValues(alpha: 0.28),
+                    Colors.black.withValues(alpha: 0),
                   ],
                 ),
               ),
@@ -122,6 +145,10 @@ class _UnitTileState extends State<UnitTile> with TickerProviderStateMixin {
     vsync: this,
     duration: const Duration(milliseconds: 320),
   );
+  late final AnimationController _bob = AnimationController(
+    vsync: this,
+    duration: Duration(milliseconds: 2200 + (widget.level * 137) % 900),
+  )..repeat(reverse: true);
   late final Animation<double> _introScale =
       CurvedAnimation(parent: _intro, curve: Curves.elasticOut);
   late final Animation<double> _punchScale = TweenSequence<double>([
@@ -153,17 +180,24 @@ class _UnitTileState extends State<UnitTile> with TickerProviderStateMixin {
   void dispose() {
     _intro.dispose();
     _punch.dispose();
+    _bob.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: Listenable.merge([_intro, _punch]),
-      builder: (_, child) => Transform.scale(
-        scale: _introScale.value.clamp(0.0, 2.0) * _punchScale.value,
-        child: child,
-      ),
+      animation: Listenable.merge([_intro, _punch, _bob]),
+      builder: (_, child) {
+        final bob = math.sin(_bob.value * math.pi * 2) * widget.size * 0.03;
+        return Transform.translate(
+          offset: Offset(0, bob),
+          child: Transform.scale(
+            scale: _introScale.value.clamp(0.0, 2.0) * _punchScale.value,
+            child: child,
+          ),
+        );
+      },
       child: Stack(
         clipBehavior: Clip.none,
         alignment: Alignment.center,

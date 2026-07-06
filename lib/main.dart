@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'screens/game_screen.dart';
+import 'screens/splash_screen.dart';
 import 'theme/app_theme.dart';
 
 void main() {
@@ -18,7 +18,7 @@ class MergeKingdomApp extends StatelessWidget {
       title: 'Merge Kingdom Rush',
       debugShowCheckedModeBanner: false,
       theme: buildTheme(),
-      home: const GameScreen(),
+      home: const SplashScreen(),
     );
   }
 }
